@@ -1,3 +1,8 @@
+@font-face {
+  src: url("../fonts/LeagueSpartan-Regular.otf");
+  font-family: "League Spartan";
+}
+
 #bg-section {
   background-image: url("../img/bg.jpg");
   background-repeat: no-repeat;

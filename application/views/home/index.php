@@ -1,85 +1,64 @@
-	<section class="hero is-medium is-dark" id="bg-section">
-	    <div class="hero-body">
-	        <div class="container">
-	            <h1 class="title is-1">
-	                Yoga Hilmi's Blog 👋🏽
-	            </h1>
-	            <h2 class="subtitle is-3">
-	                Welcome to my Personal Blog
-	            </h2>
-	        </div>
-	    </div>
-	</section>
-	<div class="container">
-	    <article>
-	        <div class="columns">
-	            <div class="column is-three-quarters-desktop is-three-quarters-tablet">
-	                <section class="section">
-	                    <h2 class="title is-2">📄 Posts</h2>
-	                    <hr>
-	                    <?php foreach ($posts as $row) : ?>
-	                    <div class="box">
-	                        <div class="level">
-	                            <div class="level-left">
-	                                <h4 class="title"><?= $row['title'] ?></h4>
-	                            </div>
-	                            <div class="level-right">
-	                                <div class="tag"><i class="fas fa-tag"></i>&nbsp;<?= $row['category'] ?></div>
-	                            </div>
-	                        </div>
-	                        <p class="content"><?= substr($row['post'], 0, 140) . "..." ?></p>
-	                        <a href="<?= base_url() . "story/stories/" . $row['slug'] ?>" class="button is-info">Read more</a>
-	                    </div>
-	                    <?php endforeach; ?>
-	                </section>
-	            </div>
+<div class="jumbotron jumbotron-fluid text-white" style="margin-top: 52.7667px" id="bg-section">
+    <div class="container">
+        <h1 class="display-4" style="font-family: League Spartan, sans-serif; font-weight: bold">Yoga Hilmi's Blog 👋🏽</h1>
+        <p class="lead">Welcome to my Personal Blog</p>
+    </div>
+</div>
+<div class="container mb-3">
+    <div class="row">
+        <div class="col-lg-9 col-md-9">
+            <article class="text-dark">
+                <h2 class="h2">📄 Posts</h2>
+                <hr>
+                <?php foreach ($posts as $row) : ?>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-8">
+                                <h4 class="card-title"><?= $row['title'] ?></h4>
+                            </div>
+                            <div class="col-lg-4 col-md-4 text-right">
+                                <span class="badge badge-pill badge-secondary"><i class="mdi mdi-tag-multiple"></i>&nbsp;<?= $row['category'] ?></span>
+                            </div>
+                        </div>
+                        <div class="card-text"><?= substr($row['post'], 0, 140) . "..." ?></div>
+                        <a class="btn btn-primary" href="<?= base_url('story/read/') . $row['slug'] ?>">Read More</a>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </article>
+        </div>
+        <div class="col-lg-3 col-md-3">
+            <div class="list-group">
+                <span class="list-group-item active">
+                    <span class="h3">Category</span>
+                </span>
+                <?php foreach ($category as $row) : ?>
+                <a class="list-group-item list-group-item-action" href="<?= base_url('story/category/') . $row['category'] ?>">
+                    <i class="mdi mdi-chevron-right-circle"></i>&nbsp;
+                    <?= ucfirst($row['category']) ?>
+                </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+</div>
 
-	            <div class="column is-one-quarter-desktop is-one-quarter-tablet ">
-	                <div class="panel is-radiusless is-shadowless" style="margin-top: 1em;">
-	                    <div class="panel-heading">
-	                        Categories
-	                    </div>
-	                    <?php foreach ($category as $row) : ?>
-	                    <a href="<?= base_url() ?>story/category/<?= $row['category'] ?>" class="panel-block">
-	                        <span class="panel-icon">
-	                            <i class="mdi mdi-chevron-right-circle"></i>
-	                        </span>
-	                        <?= ucfirst($row['category']) ?>
-	                    </a>
-	                    <?php endforeach; ?>
-	                </div>
-
-	            </div>
-	        </div>
-	    </article>
-	</div>
-	<footer class="footer has-background-dark has-text-white">
-	    <div class="container">
-	        <div class="level">
-	            <div class="level-item has-text-centered">
-	                <div>
-	                    <p class="heading">Read</p>
-	                    <p class="title has-text-white"><i class="mdi mdi-book-open"></i></p>
-	                </div>
-	            </div>
-	            <div class="level-item has-text-centered">
-	                <div>
-	                    <p class="heading">Share</p>
-	                    <p class="title has-text-white"><i class="mdi mdi-share-variant"></i></p>
-	                </div>
-	            </div>
-	            <div class="level-item has-text-centered">
-	                <div>
-	                    <p class="heading">Like</p>
-	                    <p class="title has-text-white"><i class="mdi mdi-thumb-up"></i></p>
-	                </div>
-	            </div>
-	            <div class="level-item has-text-centered">
-	                <div>
-	                    <p class="heading">Comments</p>
-	                    <p class="title has-text-white"><i class="mdi mdi-chat"></i></p>
-	                </div>
-	            </div>
-	        </div>
-	    </div>
-	</footer> 
+<footer class="d-flex justify-content-around align-items-center bg-dark text-white p-3 px-auto">
+    <div class="text-center">
+        <p class="lead">Read</p>
+        <h2><i class="mdi mdi-book-open"></i></h2>
+    </div>
+    <div class="text-center">
+        <p class="lead">Share</p>
+        <h2><i class="mdi mdi-share-variant"></i></h2>
+    </div>
+    <div class="text-center">
+        <p class="lead">Like</p>
+        <h2><i class="mdi mdi-thumb-up"></i></h2>
+    </div>
+    <div class="text-center">
+        <p class="lead">Comment</p>
+        <h2><i class="mdi mdi-chat"></i></h2>
+    </div>
+</footer> 
