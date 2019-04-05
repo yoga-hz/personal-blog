@@ -23,7 +23,7 @@
                     </div>
                     <div class="col-lg-9">
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="files" name="image">
+                            <input type="file" class="custom-file-input" id="files" name="gambar">
                             <label class="custom-file-label" for="files">Choose file...</label>
                         </div>
                     </div>
@@ -38,4 +38,4 @@
 
         </form>
     </div>
-</div> 
+</div>

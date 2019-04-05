@@ -13,6 +13,7 @@
     <link href="<?= base_url('assets/css/') ?>bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets/css/') ?>icons.min.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets/css/') ?>app.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?= base_url('assets/css/vendor/') ?>dataTables.bootstrap4.css" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -59,13 +60,13 @@
                         <li class="menu-title">Posts</li>
 
                         <li>
-                            <a href="javascript: void(0);" class="text-primary">
+                            <a href="<?= base_url('admin/new_post/') ?>" class="text-primary">
                                 <i class="mdi mdi-file-plus"></i>
                                 <span>Add new Post</span>
                             </a>
                         </li>
                         <li>
-                            <a href="javascript: void(0);" style="color: mediumpurple" onmouseover="$(this).css('color', 'mediumorchid')" onmouseout="$(this).css('color', 'mediumpurple')">
+                            <a href="<?= base_url('admin/all_posts/') ?>" style="color: mediumpurple" onmouseover="$(this).css('color', 'mediumorchid')" onmouseout="$(this).css('color', 'mediumpurple')">
                                 <i class="mdi mdi-file-document"></i>
                                 <span>All Posts</span>
                             </a>

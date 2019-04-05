@@ -6,7 +6,7 @@ class Admin extends CI_Controller
         parent::__construct();
         $this->load->library('form_validation');
         $this->load->model('Admin_model');
-        $this->load->helper('form');
+        $this->load->helper(['form', 'url']);
     }
 
     public function index() //Default method direct to Login page
@@ -21,23 +21,6 @@ class Admin extends CI_Controller
             $this->load->view('templates/auth_footer');
         } else {
             $this->login();
-        }
-    }
-
-    public function write() //Method for creating new post/story
-    {
-        $data['title'] = "Write new Story";
-
-        $this->form_validation->set_rules('post_title', 'Title', 'required');
-        $this->form_validation->set_rules('main_post', 'Post', 'required');
-
-        if ($this->form_validation->run() == false) {
-            $this->load->view('templates/header', $data);
-            $this->load->view('story/write');
-            $this->load->view('templates/footer');
-        } else {
-            $this->Admin_model->add_story();
-            redirect('story');
         }
     }
 
@@ -142,36 +125,62 @@ class Admin extends CI_Controller
             $name = $this->input->post('name', true);
             $email = $this->input->post('email');
 
-            $upload_img = $_FILES['image']['name'];
-            //checking there is picture or not to be uploaded
+            $upload_img = $_FILES['gambar'];
+            //checking there is or not to be uploaded
+            $config['upload_path'] = './assets/img/profile/';
+            $config['allowed_types'] = 'png|jpg|gif|jpeg';
+            $config['max_size'] = '2048';
+            $this->load->library('upload', $config);
+
             if ($upload_img) {
-                $config['upload_path'] = './assets/img/profile/';
-                $config['allowed_types'] = 'png|jpg|gif';
-                $config['max_size'] = '1024';
 
-                $this->load->library('upload', $config);
-
-                if ($this->upload->do_upload('image')) {
+                if ($this->upload->do_upload('gambar')) {
                     $old_img = $data['user']['image'];
                     if ($old_img != 'default.jpg') {
                         unlink(FCPATH . 'assets/img/profile/' . $old_img);
                     }
 
                     $new_img = $this->upload->data('file_name');
-                    var_dump($new_img);
-                    die;
                     $this->db->set('image', $new_img);
                 } else {
                     echo $this->upload->display_errors();
+                    die;
                 }
             }
-
             $this->db->set('name', $name);
             $this->db->where('email', $email);
             $this->db->update('users');
 
             $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissable fade show mt-2" role="alert">Your profile information has been updated!<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button></div>');
             redirect('admin/dashboard');
+        }
+    }
+
+    public function all_posts()
+    {
+        $data['user'] = $this->db->get_where('users', ['email' => $this->session->userdata('email')])->row_array();
+        $data['page_title'] = "All Posts";
+        $data['posts'] = $this->Admin_model->get_all_posts();
+        $this->load->view('templates/dash_header', $data);
+        $this->load->view('admin/all_posts', $data);
+        $this->load->view('templates/dash_footer');
+    }
+
+    public function new_post()
+    {
+        $data['page_title'] = "Create New Post";
+        $data['user'] = $this->db->get_where('users', ['email' => $this->session->userdata('email')])->row_array();
+
+        $this->form_validation->set_rules('post_title', 'Post Title', 'required|trim');
+        $this->form_validation->set_rules('post_category', 'Category', 'trim');
+        $this->form_validation->set_rules('post_main', 'Story', 'required');
+
+        if ($this->form_validation->run() == false) {
+            $this->load->view('templates/dash_header', $data);
+            $this->load->view('admin/new_post', $data);
+            $this->load->view('templates/dash_footer');
+        } else {
+            $this->Admin_model->add_story();
         }
     }
 }

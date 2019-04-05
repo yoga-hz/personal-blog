@@ -16,19 +16,19 @@ class Admin_model extends CI_Model
 
     public function add_story()
     {
-        $category_post = $this->input->post('post_category', true);
-        if (empty($category_post)) {
+        $post_category = $this->input->post('post_category', true);
+        if (empty($post_category)) {
             $data = array(
                 'title' => $this->input->post('post_title', true),
-                'post' => $this->input->post('main_post', false),
+                'post' => $this->input->post('post_main', false),
                 'category' => 'uncategorized',
                 'slug' => url_title($this->input->post('post_title', true), '-', true)
             );
         } else {
             $data = array(
                 'title' => $this->input->post('post_title', true),
-                'post' => $this->input->post('main_post', false),
-                'category' => $category_post,
+                'post' => $this->input->post('post_main', false),
+                'category' => $post_category,
                 'slug' => url_title($this->input->post('post_title', true), '-', true)
             );
         }
@@ -50,11 +50,11 @@ class Admin_model extends CI_Model
 
             $this->load->library('upload', $config);
 
-            if ($this->upload->do_upload('image')) {
-                /*$old_img = $data['user']['image'];
+            if ($this->upload->do_upload('gambar')) {
+                $old_img = $data['user']['image'];
                 if ($old_img != 'default.jpg') {
                     unlink(FCPATH . 'assets/img/profile/' . $old_img);
-                }*/
+                }
 
                 $new_img = $this->upload->data('file_name');
                 var_dump($new_img);
