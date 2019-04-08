@@ -22,6 +22,7 @@ class Admin_model extends CI_Model
                 'title' => $this->input->post('post_title', true),
                 'post' => $this->input->post('post_main', false),
                 'category' => 'uncategorized',
+                'is_published' => 1,
                 'slug' => url_title($this->input->post('post_title', true), '-', true)
             );
         } else {
@@ -29,10 +30,35 @@ class Admin_model extends CI_Model
                 'title' => $this->input->post('post_title', true),
                 'post' => $this->input->post('post_main', false),
                 'category' => $post_category,
+                'is_published' => 1,
                 'slug' => url_title($this->input->post('post_title', true), '-', true)
             );
         }
         $this->db->insert('posts', $data);
+    }
+
+    public function update_story()
+    {
+        $post_category = $this->input->post('post_category', true);
+        $id = $this->input->post('post_id');
+        if (empty($post_category)) {
+            $data = array(
+                'title' => $this->input->post('post_title', true),
+                'post' => $this->input->post('post_main', false),
+                'category' => 'uncategorized',
+                'is_published' => 1,
+                'slug' => url_title($this->input->post('post_title', true), '-', true)
+            );
+        } else {
+            $data = array(
+                'title' => $this->input->post('post_title', true),
+                'post' => $this->input->post('post_main', false),
+                'category' => $post_category,
+                'is_published' => 1,
+                'slug' => url_title($this->input->post('post_title', true), '-', true)
+            );
+        }
+        $this->db->update('posts', $data, ['id_posts' => $id]);
     }
 
     public function update_profile()
@@ -71,5 +97,10 @@ class Admin_model extends CI_Model
 
         $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissable fade show mt-2" role="alert">Your profile information has been updated!<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button></div>');
         redirect('admin/dashboard');
+    }
+
+    public function get_post_byid($id)
+    {
+        return $this->db->get_where('posts', ['id_posts' => $id])->row_array();
     }
 }

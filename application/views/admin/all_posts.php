@@ -1,4 +1,9 @@
-<div class="row container-fluid mt-3">
+<div class="row container mt-3">
+    <div class="col-lg-4">
+        <?= $this->session->flashdata('message') ?>
+    </div>
+</div>
+<div class="row container-fluid">
     <div class="col-lg">
         <div class="card">
             <div class="card-body">
@@ -29,9 +34,9 @@
                                         <span class="mdi mdi-dots-vertical"></span>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="ddAction" style="box-shadow: 0 2px 10px 0 lightgrey">
-                                        <a class="dropdown-item" href="<?= base_url('admin/edit_post/') . $row['id_posts'] ?>">Edit</a>
-                                        <a class="dropdown-item text-light bg-danger" href="<?= base_url('admin/delete_post/') . $row['id_posts'] ?>">Delete</a>
-                                        <a class="dropdown-item" href="#">???</a>
+                                        <a class="dropdown-item" href="<?= base_url('admin/edit_post/') . $row['id_posts'] ?>"><span class="mdi mdi-pencil"></span>&nbsp;Edit</a>
+                                        <a class="dropdown-item" href="<?= base_url('admin/hide_post/') . $row['id_posts'] ?>"><span class="mdi mdi-eye-off"></span>&nbsp;Hide</a>
+                                        <a class="dropdown-item" href="<?= base_url('admin/delete_post/') . $row['id_posts'] ?>"><span class="mdi mdi-trash-can"></span>&nbsp;Delete</a>
                                     </div>
                                 </div>
                             </td>

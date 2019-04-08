@@ -1,5 +1,10 @@
-<div class="row my-5">
+<div class="row my-3">
     <div class="col-lg-8">
+        <div class="row mb-2 justify-content-end">
+            <div class="col-sm-10">
+                <a href="<?= base_url('admin/change_pass/') ?>" class="btn btn-outline-dark btn-sm">Change Password</a>
+            </div>
+        </div>
         <?= form_open_multipart('admin/edit') ?>
         <div class="form-group row">
             <label for="email" class="col-sm-2 col-form-label text-right">Email</label>

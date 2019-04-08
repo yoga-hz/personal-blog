@@ -1,7 +1,7 @@
 <?php
 class Admin extends CI_Controller
 {
-    public function __construct() //Load neccesary library and helper
+    public function __construct() // Load neccesary library and helper
     {
         parent::__construct();
         $this->load->library('form_validation');
@@ -9,7 +9,7 @@ class Admin extends CI_Controller
         $this->load->helper(['form', 'url']);
     }
 
-    public function index() //Default method direct to Login page
+    public function index() // Default method direct to Login page
     {
         $this->form_validation->set_rules('emailaddress', 'Email', 'required|valid_email|trim');
         $this->form_validation->set_rules('password', 'Password', 'required|trim');
@@ -24,7 +24,7 @@ class Admin extends CI_Controller
         }
     }
 
-    private function login() //Method for Login with active user, here
+    private function login() // Method for Login with active user, here
     {
         $email = $this->input->post('emailaddress');
         $pass = md5($this->input->post('password'));
@@ -53,7 +53,7 @@ class Admin extends CI_Controller
         }
     }
 
-    public function register() //Method for Register new user here
+    public function register() // Method for Register new user here
     {
         $this->form_validation->set_rules('full_name', 'Full Name', 'required|trim');
         $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|is_unique[users.email]');
@@ -109,7 +109,7 @@ class Admin extends CI_Controller
         }
     }
 
-    public function edit()
+    public function edit() // Method for edit profile [not include Change Password]
     {
         $data['user'] = $this->db->get_where('users', ['email' => $this->session->userdata('email')])->row_array();
         $data['page_title'] = 'Edit Profile';
@@ -156,7 +156,7 @@ class Admin extends CI_Controller
         }
     }
 
-    public function all_posts()
+    public function all_posts() // Method for show all posts on table
     {
         $data['user'] = $this->db->get_where('users', ['email' => $this->session->userdata('email')])->row_array();
         $data['page_title'] = "All Posts";
@@ -166,7 +166,7 @@ class Admin extends CI_Controller
         $this->load->view('templates/dash_footer');
     }
 
-    public function new_post()
+    public function new_post() // Method for creating new post
     {
         $data['page_title'] = "Create New Post";
         $data['user'] = $this->db->get_where('users', ['email' => $this->session->userdata('email')])->row_array();
@@ -177,10 +177,83 @@ class Admin extends CI_Controller
 
         if ($this->form_validation->run() == false) {
             $this->load->view('templates/dash_header', $data);
-            $this->load->view('admin/new_post', $data);
+            $this->load->view('admin/new_story', $data);
             $this->load->view('templates/dash_footer');
         } else {
             $this->Admin_model->add_story();
+            $this->session->set_flashdata('message', '<div class="alert alert-success mt-2"><b>NEW</b> Story Added!</div>');
+            redirect('admin/all_posts/');
+        }
+    }
+
+    public function edit_post($_id_post) // Method for edit current post
+    {
+        $data['page_title'] = "Edit Post";
+        $data['user'] = $this->db->get_where('users', ['email' => $this->session->userdata('email')])->row_array();
+        $data['story'] = $this->Admin_model->get_post_byid($_id_post);
+
+        $this->form_validation->set_rules('post_title', 'Post Title', 'required|trim');
+        $this->form_validation->set_rules('post_category', 'Category', 'trim');
+        $this->form_validation->set_rules('post_main', 'Story', 'required');
+
+        if ($this->form_validation->run() == false) {
+            $this->load->view('templates/dash_header', $data);
+            $this->load->view('admin/edit_story', $data);
+            $this->load->view('templates/dash_footer');
+        } else {
+            $this->Admin_model->update_story();
+            $this->session->set_flashdata('message', '<div class="alert alert-success mt-2">Story <b>Updated!</b></div>');
+            redirect('admin/all_posts/');
+        }
+    }
+
+    public function delete_post($id_post) // Method for delete selected post
+    {
+        $row = $this->db->get_where('posts', ['id_posts' => $id_post])->num_rows();
+        if ($row < 1) {
+            show_404();
+            die;
+        } else {
+            $this->db->delete('posts', ['id_posts' => $id_post]);
+            $this->session->set_flashdata('message', '<div class="alert alert-success mt-2">Story <b>Deleted!</b></div>');
+            redirect('admin/all_posts/');
+        }
+    }
+
+    public function change_pass()
+    {
+        $data['page_title'] = "Change Password";
+        $data['user'] = $this->db->get_where('users', ['email' => $this->session->userdata('email')])->row_array();
+
+        $this->form_validation->set_rules('current_pass', 'Current Password', ['required', [
+            'check_current_pass',
+            function ($pass) {
+                // $curr_pass = $this->input->post('current_pass');
+                $cek = $this->db->get_where('users', ['email' => $this->session->userdata('email'), 'password' => md5($pass)])->num_rows();
+                if ($cek > 0) {
+                    return true;
+                } else {
+                    $this->form_validation->set_message('check_current_pass', 'Your {field} does\'nt match with your current account');
+                    return false;
+                }
+            }
+        ]]);
+        $this->form_validation->set_rules('new_pass', 'New Password', 'min_length[8]|required|matches[conf_new_pass]');
+        $this->form_validation->set_rules('conf_new_pass', 'Confrim Password', 'matches[new_pass]|required');
+
+        if ($this->form_validation->run() == false) {
+            $this->load->view('templates/dash_header', $data);
+            $this->load->view('admin/edit_pass', $data);
+            $this->load->view('templates/dash_footer');
+        } else {
+            // $curr_pass = md5($this->input->post('current_pass'));
+            $new_pass = $this->input->post('new_pass');
+            $pass = [
+                'password' => md5($new_pass)
+            ];
+            $this->db->update('users', $pass, ['email' => $this->session->userdata('email')]);
+            $this->session->set_flashdata('message', '<div class="alert alert-success mt-2">Password <b>Updated!</b></div>');
+            redirect('admin/dashboard/');
         }
     }
 }
